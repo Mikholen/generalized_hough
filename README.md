@@ -10,3 +10,27 @@ The steps involved in applying a GHT are as follows (in order):
 - find maximum points in the returned accumulator array
 
 ## Result
+### Initial image
+![h](https://github.com/Mikholen/generalized_hough/assets/136765117/e3644223-82ac-4b45-8927-dc45bcf659bc)
+
+### Detection result
+![hh](https://github.com/Mikholen/generalized_hough/assets/136765117/2db658e7-87bb-4e25-8f0b-e352adf8b82e)
+
+## Requirements
+- Python 2.7 (or higher)
+  
+Libraries:
+- Matplotlib
+- Skimage
+- Numpy
+- Scipy
+
+## How to run
+Clone the respository:
+```
+git clone git@github.com:Mikholen/generalized_hough.git
+```
+Execute the demo script:
+```
+python generalized_hough.py
+```
