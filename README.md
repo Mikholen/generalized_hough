@@ -13,8 +13,12 @@ The steps involved in applying a GHT are as follows (in order):
 ### Initial image
 ![h](https://github.com/Mikholen/generalized_hough/assets/136765117/e3644223-82ac-4b45-8927-dc45bcf659bc)
 
-### Detection result
+### Maximum points in the returned accumulator array
 ![hh](https://github.com/Mikholen/generalized_hough/assets/136765117/2db658e7-87bb-4e25-8f0b-e352adf8b82e)
+
+### Detected lines
+![hhh](https://github.com/Mikholen/generalized_hough/assets/136765117/00911dfa-bd6b-4d00-810d-2e3d6bbdb872)
+
 
 ## Requirements
 - Python 2.7 (or higher)
