@@ -22,7 +22,7 @@ The steps involved in applying a GHT are as follows (in order):
 
 ## Requirements
 - Python 2.7 (or higher)
-  
+
 Libraries:
 - Matplotlib
 - Skimage

@@ -1,7 +1,5 @@
-import numpy as np
-from scipy.ndimage import convolve
-from skimage import io
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def buildRefTable(img):
@@ -13,28 +11,29 @@ def buildRefTable(img):
     """
     table = [[0 for x in range(1)] for y in range(90)]  # creating a empty list
     # r will be calculated corresponding to this point
-    img_center = [int(img.shape[0]/2), int(img.shape[1]/2)]
+    img_center = [int(img.shape[0] / 2), int(img.shape[1] / 2)]
 
     def findAngleDistance(x1, y1):
         x2, y2 = img_center[0], img_center[1]
-        r = [(x2-x1), (y2-y1)]
-        if (x2-x1 != 0):
-            return [int(np.rad2deg(np.arctan(int((y2-y1)/(x2-x1))))), r]
+        r = [(x2 - x1), (y2 - y1)]
+        if x2 - x1 != 0:
+            return [int(np.rad2deg(np.arctan(int((y2 - y1) / (x2 - x1))))), r]
         else:
             return [0, 0]
 
     filter_size = 3
-    for x in range(img.shape[0]-(filter_size-1)):
-        for y in range(img.shape[1]-(filter_size-1)):
-            if (img[x, y] != 0):
+    for x in range(img.shape[0] - (filter_size - 1)):
+        for y in range(img.shape[1] - (filter_size - 1)):
+            if img[x, y] != 0:
                 theta, r = findAngleDistance(x, y)
-                if (r != 0):
+                if r != 0:
                     table[np.absolute(theta)].append(r)
 
     for i in range(len(table)):
         table[i].pop(0)
 
     return table
+
 
 def findMaxima(acc):
     """
@@ -58,11 +57,11 @@ def matchTable(im, table):
     # matches the reference table with the given input
     # image for testing generalized Hough Transform
     m, n = im.shape
-    acc = np.zeros((m+50, n+50))  # acc array requires some extra space
+    acc = np.zeros((m + 50, n + 50))  # acc array requires some extra space
 
     def findGradient(x, y):
-        if (x != 0):
-            return int(np.rad2deg(np.arctan(int(y/x))))
+        if x != 0:
+            return int(np.rad2deg(np.arctan(int(y / x))))
         else:
             return 0
 
@@ -73,18 +72,18 @@ def matchTable(im, table):
                 theta = findGradient(x, y)
                 vectors = table[theta]
                 for vector in vectors:
-                    acc[vector[0]+x, vector[1]+y] += 1
+                    acc[vector[0] + x, vector[1] + y] += 1
     return acc
+
 
 def main():
 
-    #generating horizontal line
+    # generating horizontal line
     lines = np.zeros((250, 250))
     lines[40] = np.ones(250)
-    plt.imshow(lines, cmap='gray')
-    plt.title('Initial image')
+    plt.imshow(lines, cmap="gray")
+    plt.title("Initial image")
     plt.show()
-
 
     images = [lines]
     for img in images:
@@ -93,22 +92,22 @@ def main():
 
         table = buildRefTable(refim)
         acc = matchTable(im, table)
-        val, ridx, cidx = findMaxima(acc)
+        vals, ridxs, cidxs = findMaxima(acc)
         # code for drawing bounding-box in accumulator array...
 
-        for val, ridx, cidx in zip(val, ridx, cidx):
-            acc[ridx - 5:ridx + 5, cidx - 5] = val
-            acc[ridx - 5:ridx + 5, cidx + 5] = val
+        for val, ridx, cidx in zip(vals, ridxs, cidxs, strict=True):
+            acc[ridx - 5 : ridx + 5, cidx - 5] = val
+            acc[ridx - 5 : ridx + 5, cidx + 5] = val
 
-            acc[ridx - 5, cidx - 5:cidx + 5] = val
-            acc[ridx + 5, cidx - 5:cidx + 5] = val
+            acc[ridx - 5, cidx - 5 : cidx + 5] = val
+            acc[ridx + 5, cidx - 5 : cidx + 5] = val
 
-
-        plt.imshow(acc, cmap='grey')
-        plt.title('Accumulator array')
+        plt.imshow(acc, cmap="grey")
+        plt.title("Accumulator array")
         plt.show()
 
-        # code for drawing bounding-box in original image at the found location...
+        # code for drawing bounding-box in original image
+        # at the found location...
 
         # find the half-width and height of template
         hheight = np.floor(refim.shape[0] / 2) + 1
@@ -130,9 +129,10 @@ def main():
         # show the image
         # plt.imshow(refim, cmap='grey')
         # plt.show()
-        plt.imshow(im, cmap='grey')
-        plt.title('Detected lines')
+        plt.imshow(im, cmap="grey")
+        plt.title("Detected lines")
         plt.show()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
