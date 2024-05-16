@@ -48,7 +48,7 @@ def mock_wikipedia_random_page(mocker: MockFixture) -> Mock:
     Returns:
         Mock: A patched version of wikipedia.random_page.
     """
-    return mocker.patch("iitp_6_python.wikipedia.random_page")
+    return mocker.patch("generalized_hough.wikipedia.random_page")
 
 
 @pytest.mark.e2e

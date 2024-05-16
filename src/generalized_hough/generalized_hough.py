@@ -1,31 +1,40 @@
 """generalized_hough module."""
 
-from typing import Any, List
+from typing import Any, List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def buildRefTable(img: np.ndarray) -> List[List[List[int]]]:
+def buildRefTable(img: np.ndarray) -> List[List[int]]:
     """Builds the reference table for the given input template image.
 
     Args:
         img (np.ndarray): Input binary image.
 
     Returns:
-        List[List[List[int]]]: A reconstructed reference table.
+        List[List[int]]: A reconstructed reference table.
     """
     table = [[0 for x in range(1)] for y in range(90)]  # Creating an empty list
     # r will be calculated corresponding to this point
     img_center = [int(img.shape[0] / 2), int(img.shape[1] / 2)]
 
-    def findAngleDistance(x1: int, y1: int) -> List[int]:
+    def findAngleDistance(x1: int, y1: int) -> Tuple[int, Union[int, List[int]]]:
+        """Finds angle distance.
+
+        Args:
+            x1 (int): x1.
+            y1 (int): y1.
+
+        Returns:
+            Tuple[int, Union[int, List[int]]]: Angle distance table.
+        """
         x2, y2 = img_center[0], img_center[1]
         r = [(x2 - x1), (y2 - y1)]
         if x2 - x1 != 0:
-            return [int(np.rad2deg(np.arctan(int((y2 - y1) / (x2 - x1))))), r]
+            return int(np.rad2deg(np.arctan(int((y2 - y1) / (x2 - x1))))), r
         else:
-            return [0, 0]
+            return 0, 0
 
     filter_size = 3
     for x in range(img.shape[0] - (filter_size - 1)):
@@ -41,7 +50,7 @@ def buildRefTable(img: np.ndarray) -> List[List[List[int]]]:
     return table
 
 
-def findMaxima(acc: np.ndarray) -> List[int]:
+def findMaxima(acc: np.ndarray) -> List[np.ndarray]:
     """Finds the maximum value in the accumulator array.
 
     Args:
