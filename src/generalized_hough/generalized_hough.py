@@ -1,21 +1,25 @@
+"""generalized_hough module."""
+
 from typing import Any, List
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def buildRefTable(img):
+def buildRefTable(img: np.ndarray) -> List[List[List[int]]]:
+    """Builds the reference table for the given input template image.
+
+    Args:
+        img (np.ndarray): Input binary image.
+
+    Returns:
+        List[List[List[int]]]: A reconstructed reference table.
     """
-    builds the reference table for the given input template image
-    :param im: input binary image
-    :return:
-        table = a reconstructed reference table...
-    """
-    table = [[0 for x in range(1)] for y in range(90)]  # creating a empty list
+    table = [[0 for x in range(1)] for y in range(90)]  # Creating an empty list
     # r will be calculated corresponding to this point
     img_center = [int(img.shape[0] / 2), int(img.shape[1] / 2)]
 
-    def findAngleDistance(x1, y1):
+    def findAngleDistance(x1: int, y1: int) -> List[int]:
         x2, y2 = img_center[0], img_center[1]
         r = [(x2 - x1), (y2 - y1)]
         if x2 - x1 != 0:
@@ -37,31 +41,35 @@ def buildRefTable(img):
     return table
 
 
-def findMaxima(acc):
-    """
-    :param acc: accumulator array
-    :return:
-        maxval: maximum value found
-        ridx: row index of the maxval
-        cidx: column index of the maxval
+def findMaxima(acc: np.ndarray) -> List[int]:
+    """Finds the maximum value in the accumulator array.
+
+    Args:
+        acc (np.ndarray): Accumulator array.
+
+    Returns:
+        List[int]: A list containing the maximum value found, row index,
+                   and column index of the maximum value.
+
     """
     ridx, cidx = np.unravel_index(acc.ravel().argsort()[::-1][:1], acc.shape)
     return [acc[ridx, cidx], ridx, cidx]
 
 
-def matchTable(im, table: List[List[Any]]):
-    """
-    :param im: input binary image, for searching template
-    :param table: table for template
-    :return:
-        accumulator with searched votes
-    """
-    # matches the reference table with the given input
-    # image for testing generalized Hough Transform
-    m, n = im.shape
-    acc = np.zeros((m + 50, n + 50))  # acc array requires some extra space
+def matchTable(im: np.ndarray, table: List[List[Any]]) -> np.ndarray:
+    """Matches the reference table with the given input image.
 
-    def findGradient(x, y):
+    Args:
+        im (np.ndarray): Input binary image, for searching template.
+        table (List[List[Any]]): Table for template.
+
+    Returns:
+        np.ndarray: Accumulator with searched votes.
+    """
+    m, n = im.shape
+    acc = np.zeros((m + 50, n + 50))  # Acc array requires some extra space
+
+    def findGradient(x: int, y: int) -> int:
         if x != 0:
             return int(np.rad2deg(np.arctan(int(y / x))))
         else:
@@ -69,8 +77,7 @@ def matchTable(im, table: List[List[Any]]):
 
     for x in range(1, im.shape[0]):
         for y in range(im.shape[1]):
-
-            if im[x, y] != 0:  # boundary point
+            if im[x, y] != 0:  # Boundary point
                 theta = findGradient(x, y)
                 vectors = table[theta]
                 for vector in vectors:
@@ -79,8 +86,8 @@ def matchTable(im, table: List[List[Any]]):
 
 
 def main():
-
-    # generating horizontal line
+    """Generate an initial image, find detected lines,and display the results."""
+    # Generating a horizontal line
     lines = np.zeros((250, 250))
     lines[40] = np.ones(250)
     plt.imshow(lines, cmap="gray")
@@ -95,7 +102,7 @@ def main():
         table = buildRefTable(refim)
         acc = matchTable(im, table)
         vals, ridxs, cidxs = findMaxima(acc)
-        # code for drawing bounding-box in accumulator array...
+        # Code for drawing bounding-box in accumulator array...
 
         for val, ridx, cidx in zip(vals, ridxs, cidxs):
             acc[ridx - 5 : ridx + 5, cidx - 5] = val
@@ -108,29 +115,27 @@ def main():
         plt.title("Accumulator array")
         plt.show()
 
-        # code for drawing bounding-box in original image
+        # Code for drawing bounding-box in original image
         # at the found location...
 
-        # find the half-width and height of template
+        # Find the half-width and height of the template
         hheight = np.floor(refim.shape[0] / 2) + 1
         hwidth = np.floor(refim.shape[1] / 2) + 1
 
-        # find coordinates of the box
+        # Find coordinates of the box
         rstart = int(max(ridx - hheight, 1))
         rend = int(min(ridx + hheight, im.shape[0] - 1))
         cstart = int(max(cidx - hwidth, 1))
         cend = int(min(cidx + hwidth, im.shape[1] - 1))
 
-        # draw the box
+        # Draw the box
         im[rstart:rend, cstart] = 0.5
         im[rstart:rend, cend] = 0.5
 
         im[rstart, cstart:cend] = 0.5
         im[rend, cstart:cend] = 0.5
 
-        # show the image
-        # plt.imshow(refim, cmap='grey')
-        # plt.show()
+        # Show the image
         plt.imshow(im, cmap="gray")
         plt.title("Detected lines")
         plt.show()
