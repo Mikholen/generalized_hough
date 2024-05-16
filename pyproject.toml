@@ -38,6 +38,11 @@ mypy = "^1.10.0"
 pytype = {version = "^2024.4.11", python = "3.8"}
 typeguard = "^4.2.1"
 flake8-annotations = "^3.1.0"
+flake8-docstrings = "^1.7.0"
+darglint = "^1.8.1"
+xdoctest = "^1.1.3"
+sphinx = "^6.0.0"
+sphinx-autodoc-typehints = "^1.23.0"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
