@@ -62,7 +62,7 @@ def test_random_page_uses_given_language(mock_requests_get):
 
 @pytest.fixture
 def mock_wikipedia_random_page(mocker):
-    return mocker.patch("hypermodern_python.wikipedia.random_page")
+    return mocker.patch("generalized_hough.wikipedia.random_page")
 
 
 def test_main_uses_specified_language(runner, mock_wikipedia_random_page):

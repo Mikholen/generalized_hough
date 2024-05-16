@@ -1,3 +1,5 @@
+from typing import Any, List
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -47,7 +49,7 @@ def findMaxima(acc):
     return [acc[ridx, cidx], ridx, cidx]
 
 
-def matchTable(im, table):
+def matchTable(im, table: List[List[Any]]):
     """
     :param im: input binary image, for searching template
     :param table: table for template
@@ -95,14 +97,14 @@ def main():
         vals, ridxs, cidxs = findMaxima(acc)
         # code for drawing bounding-box in accumulator array...
 
-        for val, ridx, cidx in zip(vals, ridxs, cidxs, strict=True):
+        for val, ridx, cidx in zip(vals, ridxs, cidxs):
             acc[ridx - 5 : ridx + 5, cidx - 5] = val
             acc[ridx - 5 : ridx + 5, cidx + 5] = val
 
             acc[ridx - 5, cidx - 5 : cidx + 5] = val
             acc[ridx + 5, cidx - 5 : cidx + 5] = val
 
-        plt.imshow(acc, cmap="grey")
+        plt.imshow(acc, cmap="gray")
         plt.title("Accumulator array")
         plt.show()
 
@@ -129,7 +131,7 @@ def main():
         # show the image
         # plt.imshow(refim, cmap='grey')
         # plt.show()
-        plt.imshow(im, cmap="grey")
+        plt.imshow(im, cmap="gray")
         plt.title("Detected lines")
         plt.show()
 
